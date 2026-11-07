@@ -7,9 +7,11 @@ is doing, and shows your calendar with one click. Pick one of **10 characters**:
 astronaut, developer, footballer, basketball player, F1 driver, dog, firefighter, student or
 tennis player.
 
-<p align="center"><img src="docs/characters.gif" alt="All ten characters in every state"></p>
-
 *[Leer en español ↓](#español)*
+
+<p align="center"><img src="docs/scene_en.png" alt="PixelBuddy above the Dock: one buddy per Claude Code session and the calendar bubble"></p>
+
+<p align="center"><img src="docs/characters.gif" alt="All ten characters in every state"></p>
 
 | Claude Code… | Your buddy |
 |---|---|
@@ -26,6 +28,14 @@ tennis player.
   (iCloud, Google… any account added in *System Settings › Internet Accounts*).
 - It only reacts to sessions opened in **your project folder** (and its subfolders).
 - Native Swift app, no dependencies, no network, free.
+
+## Characters
+
+Pick yours in the welcome window or in the menu bar (*Character ▸*). Each Claude Code session
+gets the next color in order; the dog changes breed instead (labrador, dalmatian, husky,
+beagle, dachshund, pug), with a collar in the session color.
+
+<p align="center"><img src="docs/gallery.png" width="640" alt="The ten characters with their six colors"></p>
 
 ## Requirements
 
@@ -105,6 +115,8 @@ The ninja and astronaut are generated with `tools/make_sprites.py` and
 - Swift Package (macOS 14+) in `Sources/PixelBuddy/`. `scripts/build_app.sh` builds with
   `swift build -c release`, assembles `PixelBuddy.app`, signs it and installs it.
 - `scripts/simulate.sh` plays fake sessions through every state, without real work.
+- README images: `swift tools/make_readme_images.swift` (scenes and gallery) and
+  `python3 tools/make_readme_gif.py` (animation).
 - Optional: `scripts/create_signing_cert.sh` creates a local signing certificate so macOS
   keeps the Calendar permission across rebuilds (asks for your Mac password once).
 - The hook script is `plugins/pixelbuddy/scripts/pixelbuddy-hook.sh`; the plugin catalog is
@@ -117,14 +129,51 @@ Claude and Claude Code are trademarks of Anthropic.
 
 ## Español
 
-Un compañero pixel art que vive encima del Dock, reacciona a lo que hace **Claude Code** y te
-enseña tu calendario con un clic. Hay **10 personajes**: ninja, astronauta, programador,
-futbolista, baloncestista, piloto de F1, perro, bombero, estudiante y tenista.
+Un pequeño compañero pixel art que vive encima del Dock de tu Mac. Te muestra de un vistazo
+qué está haciendo **Claude Code** y, si haces clic en él, te enseña tu calendario. Puedes
+elegir entre **10 personajes**: ninja, astronauta, programador, futbolista, baloncestista,
+piloto de F1, perro, bombero, estudiante y tenista.
 
-**Requisitos:** macOS 14 o posterior, Command Line Tools de Xcode
-(`xcode-select --install`) y Claude Code.
+<p align="center"><img src="docs/scene_es.png" alt="PixelBuddy encima del Dock: un personaje por cada sesión de Claude Code y el bocadillo del calendario"></p>
 
-**Instalar:**
+### Qué significa cada animación
+
+| Si Claude Code… | Tu personaje… |
+|---|---|
+| está trabajando | corre, vuela, bota el balón o conduce de un lado a otro |
+| ha terminado | lo celebra durante 30 segundos (katana, bandera, gol, canasta, A+…) |
+| te hace una pregunta o necesita tu permiso | muestra una **?** azul |
+| se ha parado por un error | muestra una **!** roja |
+| espera tu siguiente mensaje | entrena, se estira, hace toques, lee… (1 minuto) |
+| lleva un rato sin actividad | se duerme (Zzz) |
+
+- Aparece un personaje por cada sesión de Claude Code, cada uno de un color (azul, rojo,
+  verde, morado, naranja y amarillo). En el perro, en lugar del color cambia la raza.
+- Al hacer clic en un personaje verás tu evento actual y el siguiente de hoy, sacados del
+  Calendario de macOS. Sirve cualquier cuenta que tengas añadida en
+  *Ajustes del Sistema › Cuentas de internet* (iCloud, Google…).
+- Solo reacciona a las sesiones que abras en **tu carpeta de proyecto** (y sus subcarpetas).
+- Es una app nativa, gratuita, sin dependencias externas y sin conexión a internet.
+
+### Personajes
+
+Elige el tuyo en la ventana de bienvenida o en la barra de menús (*Personaje ▸*). Cada sesión
+nueva recibe el siguiente color; el perro cambia de raza (labrador, dálmata, husky, beagle,
+salchicha y carlino) y lleva un collar del color de su sesión.
+
+<p align="center"><img src="docs/gallery.png" width="640" alt="Los diez personajes con sus seis colores"></p>
+
+### Qué necesitas
+
+- macOS 14 Sonoma o posterior.
+- Las herramientas de línea de comandos de Xcode (*Command Line Tools*). Si no las tienes,
+  abre la app **Terminal** y escribe `xcode-select --install`; no hace falta Xcode completo.
+- Claude Code (la app de escritorio o la versión de terminal).
+
+### Instalación
+
+Abre la app **Terminal** (está en *Aplicaciones › Utilidades*) y copia estos tres comandos,
+uno detrás de otro:
 
 ```bash
 git clone https://github.com/rubenbenitoferrando-sketch/PixelBuddy.git
@@ -132,21 +181,68 @@ cd PixelBuddy
 ./scripts/install.sh
 ```
 
-La app se abre con una ventana de bienvenida: elige tu personaje, tu carpeta de proyecto
-(marca **Conectar Claude Code**) y, si quieres, da acceso al Calendario. Después cierra y
-vuelve a abrir tus sesiones de Claude Code en esa carpeta.
+- El primero descarga PixelBuddy en tu Mac.
+- El segundo entra en la carpeta que se acaba de descargar.
+- El tercero compila la app y la instala en tu carpeta `~/Applications`.
 
-**Con el plugin** (en vez de "Conectar Claude Code"), dentro de una sesión en tu carpeta:
-`/plugin marketplace add rubenbenitoferrando-sketch/PixelBuddy` y `/plugin install pixelbuddy@pixelbuddy`, con
-alcance **local**.
+Al terminar se abre la **ventana de bienvenida**, donde:
 
-**Uso:** clic en el personaje → evento actual y el siguiente de hoy (o "Puedes descansar").
-**✕ Quitar** retira el personaje de una sesión que ya no usas. En la barra de menús eliges
-personaje, calendarios, carpeta vigilada y arranque al iniciar sesión.
+1. eliges tu personaje;
+2. eliges tu carpeta de proyecto (la que abres en Claude Code) y marcas
+   **Conectar Claude Code**. Así PixelBuddy añade sus avisos al archivo personal
+   `.claude/settings.local.json` de esa carpeta, después de hacer una copia de seguridad;
+3. si quieres, das acceso al Calendario.
 
-**Privacidad:** todo se queda en tu Mac; no hay conexiones a internet. Solo se guardan el id
-de sesión, la carpeta, el tipo de evento y la hora.
+Después se abre una guía corta, **Cómo funciona**, con todas las animaciones explicadas.
+Por último, cierra y vuelve a abrir tus sesiones de Claude Code en esa carpeta para que tu
+personaje empiece a reaccionar.
 
-**Desinstalar:** `./scripts/uninstall.sh`.
+#### Alternativa: el plugin de Claude Code
 
-Licencia MIT. Proyecto independiente, sin relación con Anthropic.
+En lugar de marcar *Conectar Claude Code*, puedes instalar los avisos como un plugin. Abre una
+sesión de Claude Code en tu carpeta de proyecto y escribe:
+
+```
+/plugin marketplace add rubenbenitoferrando-sketch/PixelBuddy
+/plugin install pixelbuddy@pixelbuddy
+```
+
+Cuando te pregunte dónde instalarlo, elige el alcance **local** (solo este proyecto y solo
+para ti). La app sigue siendo necesaria: el plugin solo le cuenta lo que hace Claude Code.
+
+### Uso
+
+- **Clic en un personaje:** aparece un bocadillo con tu evento actual (y hasta qué hora dura)
+  y el siguiente de hoy. Si no tienes nada, pone *Puedes descansar*. Se cierra con otro clic
+  o a los 8 segundos.
+- **✕ Quitar** (dentro del bocadillo): retira el personaje de una sesión que ya no usas. Si
+  esa sesión vuelve a trabajar, el personaje reaparece. Cuando no hay ninguna sesión, queda
+  un personaje principal para que siempre puedas consultar el calendario.
+- **Icono de la barra de menús** (arriba a la derecha): cambiar de personaje, mostrarlos u
+  ocultarlos, elegir calendarios, cambiar la carpeta vigilada, volver a la bienvenida, abrir
+  la guía *Cómo funciona*, activar el arranque al iniciar sesión y salir.
+
+### Privacidad
+
+Todo se queda en tu Mac. Por cada sesión se guarda un archivo pequeño en
+`~/Library/Application Support/PixelBuddy/sessions/` con el identificador de la sesión, la
+carpeta, el tipo de aviso, el nombre de la herramienta y la hora. **Nunca** se guarda lo que
+escribes ni tu código. Los avisos de otras carpetas se ignoran, el calendario se lee
+directamente en tu Mac y PixelBuddy no se conecta a internet.
+
+### Desinstalar
+
+Desde la carpeta de PixelBuddy, en Terminal:
+
+```bash
+./scripts/uninstall.sh
+```
+
+Quita los avisos de tu carpeta de proyecto, el arranque al iniciar sesión, la app, sus datos y
+sus ajustes (las copias de seguridad de `settings.local.json` se conservan). Si usaste el
+plugin, escribe también en Claude Code: `/plugin uninstall pixelbuddy@pixelbuddy`.
+
+---
+
+Licencia MIT. PixelBuddy es un proyecto independiente, sin relación con Anthropic ni
+respaldado por ella. Claude y Claude Code son marcas de Anthropic.
