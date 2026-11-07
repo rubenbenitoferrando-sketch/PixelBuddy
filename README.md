@@ -22,8 +22,12 @@ tennis player.
 | waits for your next message | trains, stretches, juggles, reads… (1 min) |
 | has been idle | sleeps, Zzz |
 
-- One buddy per Claude Code session, each in its own color (blue, red, green, purple, orange,
-  yellow) — the dog changes breed instead.
+- **Several sessions at once.** You can have several Claude Code sessions open in the same
+  project folder at the same time: each one gets its own buddy, and they all work
+  independently — one can be running while another celebrates and a third asks you
+  something. The color tells you which session is which: the first session you open is
+  blue, the second red, then green, purple, orange and yellow (the dog changes breed
+  instead). When they are idle they stand side by side without overlapping.
 - Click a buddy to see your current event and your next one today, from the macOS Calendar
   (iCloud, Google… any account added in *System Settings › Internet Accounts*).
 - It only reacts to sessions opened in **your project folder** (and its subfolders).
@@ -147,8 +151,12 @@ piloto de F1, perro, bombero, estudiante y tenista.
 | espera tu siguiente mensaje | entrena, se estira, hace toques, lee… (1 minuto) |
 | lleva un rato sin actividad | se duerme (Zzz) |
 
-- Aparece un personaje por cada sesión de Claude Code, cada uno de un color (azul, rojo,
-  verde, morado, naranja y amarillo). En el perro, en lugar del color cambia la raza.
+- **Varias sesiones a la vez.** Puedes tener abiertas varias sesiones de Claude Code en la
+  misma carpeta de proyecto al mismo tiempo: cada una tiene su propio personaje y funcionan
+  por separado. Uno puede estar trabajando mientras otro celebra y un tercero te pregunta
+  algo. El color te dice qué sesión es cuál: la primera que abres es azul, la segunda roja y
+  después verde, morada, naranja y amarilla (en el perro cambia la raza). Cuando están
+  quietos se colocan uno al lado del otro, sin taparse.
 - Al hacer clic en un personaje verás tu evento actual y el siguiente de hoy, sacados del
   Calendario de macOS. Sirve cualquier cuenta que tengas añadida en
   *Ajustes del Sistema › Cuentas de internet* (iCloud, Google…).
