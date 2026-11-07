@@ -30,7 +30,9 @@ tennis player.
   instead). When they are idle they stand side by side without overlapping.
 - Click a buddy to see your current event and your next one today, from the macOS Calendar
   (iCloud, Google… any account added in *System Settings › Internet Accounts*).
-- It only reacts to sessions opened in **your project folder** (and its subfolders).
+- It only reacts to sessions opened in **your project folder** (and its subfolders). Git
+  repositories and worktrees are supported: a session in a worktree counts as the original
+  repository.
 - Native Swift app, no dependencies, no network, free.
 
 ## Characters
@@ -59,8 +61,10 @@ The script builds the app on your Mac and installs it in `~/Applications`. Pixel
 opens a welcome window where you:
 
 1. pick your character,
-2. choose your project folder — and tick **Connect Claude Code** (it adds PixelBuddy's hooks
-   to that folder's personal `.claude/settings.local.json`, backing it up first),
+2. choose your project folder — and tick **Connect Claude Code**. It adds PixelBuddy's hooks
+   to your personal `.claude/settings.local.json` (backing it up first): the folder's own, or,
+   if the folder is inside a git repository, the repository root's, which is where Claude Code
+   reads it. The file and its backups are kept out of git,
 3. optionally allow Calendar access.
 
 Close and reopen your Claude Code sessions in that folder, and your buddy comes to life.
@@ -161,6 +165,8 @@ piloto de F1, perro, bombero, estudiante y tenista.
   Calendario de macOS. Sirve cualquier cuenta que tengas añadida en
   *Ajustes del Sistema › Cuentas de internet* (iCloud, Google…).
 - Solo reacciona a las sesiones que abras en **tu carpeta de proyecto** (y sus subcarpetas).
+  Funciona con repositorios git y con *worktrees*: una sesión en una worktree cuenta como si
+  estuviera en el repositorio original.
 - Es una app nativa, gratuita, sin dependencias externas y sin conexión a internet.
 
 ### Personajes
@@ -197,8 +203,10 @@ Al terminar se abre la **ventana de bienvenida**, donde:
 
 1. eliges tu personaje;
 2. eliges tu carpeta de proyecto (la que abres en Claude Code) y marcas
-   **Conectar Claude Code**. Así PixelBuddy añade sus avisos al archivo personal
-   `.claude/settings.local.json` de esa carpeta, después de hacer una copia de seguridad;
+   **Conectar Claude Code**. Así PixelBuddy añade sus avisos a tu archivo personal
+   `.claude/settings.local.json`, después de hacer una copia de seguridad. Es el de esa
+   carpeta o, si está dentro de un repositorio git, el de la raíz del repositorio, que es donde
+   lo lee Claude Code. Ese archivo y sus copias quedan fuera de git;
 3. si quieres, das acceso al Calendario.
 
 Después se abre una guía corta, **Cómo funciona**, con todas las animaciones explicadas.

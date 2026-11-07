@@ -13,8 +13,19 @@ enum HookInstaller {
         var errorDescription: String? { message }
     }
 
+    /// Carpeta cuyo `.claude/settings.local.json` lee Claude Code para sesiones abiertas en
+    /// `folder`: la raíz del repositorio git que la contiene (también desde subcarpetas y
+    /// worktrees) o, fuera de git, la propia carpeta.
+    static func settingsFolder(_ folder: String) -> String {
+        Config.repositoryRoot(of: folder) ?? Config.normalize(folder)
+    }
+
     static func settingsURL(_ folder: String) -> URL {
-        URL(fileURLWithPath: folder).appendingPathComponent(".claude/settings.local.json")
+        URL(fileURLWithPath: settingsFolder(folder)).appendingPathComponent(".claude/settings.local.json")
+    }
+
+    private static func localFile(in dir: String) -> URL {
+        URL(fileURLWithPath: dir).appendingPathComponent(".claude/settings.local.json")
     }
 
     static func command(_ event: String) -> String {
@@ -26,8 +37,10 @@ enum HookInstaller {
     /// true si el plugin `pixelbuddy` de Claude Code ya está activado para esa carpeta
     /// (en sus ajustes locales o de proyecto, o en los del usuario): entonces sobran los hooks.
     static func pluginEnabled(folder: String) -> Bool {
-        let files = [settingsURL(folder),
+        let root = settingsFolder(folder)
+        let files = [settingsURL(folder), localFile(in: folder),
                      URL(fileURLWithPath: folder).appendingPathComponent(".claude/settings.json"),
+                     URL(fileURLWithPath: root).appendingPathComponent(".claude/settings.json"),
                      FileManager.default.homeDirectoryForCurrentUser
                         .appendingPathComponent(".claude/settings.json")]
         for f in files {
@@ -47,6 +60,10 @@ enum HookInstaller {
             throw Failure(message: L.t("err.home"))
         }
         let url = settingsURL(folder)
+        // Si antes se instalaron en la subcarpeta, se quitan de ahí para no duplicarlos.
+        if Config.normalize(folder) != settingsFolder(folder) {
+            try? removeHooks(from: localFile(in: folder))
+        }
         try FileManager.default.createDirectory(at: url.deletingLastPathComponent(),
                                                 withIntermediateDirectories: true)
         var root = try load(url)
@@ -62,11 +79,18 @@ enum HookInstaller {
         }
         root["hooks"] = hooks
         try save(root, to: url)
-        ensureGitIgnored(folder: folder)
+        ensureGitIgnored(folder: settingsFolder(folder))
     }
 
+    /// Quita nuestros hooks de la raíz del repositorio y, por si acaso, de la propia carpeta.
     static func uninstall(folder: String) throws {
-        let url = settingsURL(folder)
+        try removeHooks(from: settingsURL(folder))
+        if Config.normalize(folder) != settingsFolder(folder) {
+            try? removeHooks(from: localFile(in: folder))
+        }
+    }
+
+    private static func removeHooks(from url: URL) throws {
         guard FileManager.default.fileExists(atPath: url.path) else { return }
         var root = try load(url)
         guard var hooks = root["hooks"] as? [String: Any] else { return }
@@ -138,14 +162,19 @@ enum HookInstaller {
                 guard !target.path.contains("\n") else { return }
                 var rel = String(target.path.dropFirst(dir.path.count))
                 if rel.hasPrefix("/") { rel.removeFirst() }
-                let line = "/" + (rel.isEmpty ? "" : rel + "/") + ".claude/settings.local.json"
+                let base = "/" + (rel.isEmpty ? "" : rel + "/") + ".claude/settings.local.json"
+                // el archivo personal y sus copias de seguridad
+                let lines = [base, base + ".backup-*"]
                 let exclude = git.appendingPathComponent("info/exclude")
                 let current = (try? String(contentsOf: exclude, encoding: .utf8)) ?? ""
-                if current.split(separator: "\n").contains(where: { $0 == line }) { return }
+                let existing = Set(current.split(separator: "\n").map(String.init))
+                let missing = lines.filter { !existing.contains($0) }
+                if missing.isEmpty { return }
                 try? fm.createDirectory(at: exclude.deletingLastPathComponent(),
                                         withIntermediateDirectories: true)
                 let sep = current.isEmpty || current.hasSuffix("\n") ? "" : "\n"
-                let added = current + sep + "# PixelBuddy (archivo personal)\n" + line + "\n"
+                let added = current + sep + "# PixelBuddy (archivo personal)\n"
+                    + missing.joined(separator: "\n") + "\n"
                 try? added.write(to: exclude, atomically: true, encoding: .utf8)
                 return
             }

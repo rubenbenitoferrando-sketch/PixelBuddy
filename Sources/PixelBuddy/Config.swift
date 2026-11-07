@@ -57,10 +57,70 @@ enum Config {
     }
 
     /// true si `cwd` es la carpeta vigilada o está dentro de ella.
+    /// Una sesión en una worktree de git cuenta como si estuviera en el repositorio original.
     static func isWatched(cwd: String) -> Bool {
         guard let root = watchedFolder, !cwd.isEmpty else { return false }
-        let r = comparable(root), c = comparable(cwd)
+        return isInside(cwd, root: root)
+            || (worktreeEquivalent(of: cwd).map { isInside($0, root: root) } ?? false)
+    }
+
+    static func isInside(_ path: String, root: String) -> Bool {
+        let r = comparable(root), c = comparable(path)
         if r == "/" { return true }
         return c == r || c.hasPrefix(r + "/")
+    }
+
+    // MARK: - Git
+
+    /// Carpeta de git más cercana a `path` (subiendo): (carpeta, es_worktree).
+    private static func enclosingGit(_ path: String) -> (dir: URL, worktreeGitFile: URL?)? {
+        let fm = FileManager.default
+        var dir = URL(fileURLWithPath: normalize(path))
+        while true {
+            let dotgit = dir.appendingPathComponent(".git")
+            var isDir: ObjCBool = false
+            if fm.fileExists(atPath: dotgit.path, isDirectory: &isDir) {
+                return (dir, isDir.boolValue ? nil : dotgit)
+            }
+            if dir.path == "/" { return nil }
+            dir = dir.deletingLastPathComponent()
+        }
+    }
+
+    /// Raíz del repositorio principal a partir del archivo `.git` de una worktree.
+    private static func mainRoot(fromWorktreeGitFile file: URL) -> URL? {
+        guard let text = try? String(contentsOf: file, encoding: .utf8),
+              let line = text.split(separator: "\n").first(where: { $0.hasPrefix("gitdir:") }) else { return nil }
+        var gitdir = line.dropFirst("gitdir:".count).trimmingCharacters(in: .whitespaces)
+        if !gitdir.hasPrefix("/") {
+            gitdir = file.deletingLastPathComponent().appendingPathComponent(gitdir).standardizedFileURL.path
+        }
+        // .git/worktrees/<nombre>/commondir apunta al .git del repositorio principal
+        let gitdirURL = URL(fileURLWithPath: gitdir)
+        guard let common = (try? String(contentsOf: gitdirURL.appendingPathComponent("commondir"),
+                                         encoding: .utf8))?.trimmingCharacters(in: .whitespacesAndNewlines),
+              !common.isEmpty else { return nil }   // p. ej. un submódulo: no es una worktree
+        let commonURL = common.hasPrefix("/") ? URL(fileURLWithPath: common)
+                                              : gitdirURL.appendingPathComponent(common).standardizedFileURL
+        guard commonURL.lastPathComponent == ".git" else { return nil }
+        return commonURL.deletingLastPathComponent()
+    }
+
+    /// Si `cwd` está dentro de una worktree de git, la ruta equivalente en el repositorio
+    /// principal (misma subcarpeta). nil si no es una worktree.
+    static func worktreeEquivalent(of cwd: String) -> String? {
+        guard let (dir, file) = enclosingGit(cwd), let gitFile = file,
+              let main = mainRoot(fromWorktreeGitFile: gitFile) else { return nil }
+        let rel = String(normalize(cwd).dropFirst(dir.path.count))
+        return normalize(main.path) + rel
+    }
+
+    /// Raíz del repositorio principal que contiene `folder`, o nil si no está en uno.
+    /// Claude Code lee `.claude/settings.local.json` de ahí (salvo si es tu carpeta de inicio).
+    static func repositoryRoot(of folder: String) -> String? {
+        guard let (dir, file) = enclosingGit(folder) else { return nil }
+        let root = file.flatMap(mainRoot(fromWorktreeGitFile:)) ?? (file == nil ? dir : nil)
+        guard let r = root.map({ normalize($0.path) }), r != normalize(NSHomeDirectory()) else { return nil }
+        return r
     }
 }

@@ -29,6 +29,13 @@ if args.count >= 2 {
             print("✗ \(error.localizedDescription)")
             exit(1)
         }
+    case "--debug-paths":   // diagnóstico: --debug-paths <carpeta_vigilada> <cwd>
+        guard args.count >= 4 else { print("Uso: --debug-paths <carpeta> <cwd>"); exit(2) }
+        let (root, cwd) = (args[2], args[3])
+        let mapped = Config.worktreeEquivalent(of: cwd)
+        let watched = Config.isInside(cwd, root: root) || (mapped.map { Config.isInside($0, root: root) } ?? false)
+        print("cuenta=\(watched ? "sí" : "no")  worktree→\(mapped ?? "-")  ajustes=\(HookInstaller.settingsURL(root).path)")
+        exit(0)
     case "--uninstall-hooks":
         guard args.count >= 3 else { print("Falta la carpeta"); exit(2) }
         do {

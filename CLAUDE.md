@@ -11,11 +11,17 @@ subfolders). Everything else is ignored.
    project's shared `.claude/settings.json`. Two ways:
    - The `pixelbuddy` Claude Code plugin (`plugins/pixelbuddy/`, catalog in
      `.claude-plugin/marketplace.json`) installed with **local** scope.
-   - The app's "Connect Claude Code" / `install.sh <folder>` writes the hooks into
-     `<project>/.claude/settings.local.json` (personal file, backed up first, added to
-     `.git/info/exclude`). Skipped when the plugin is already enabled.
+   - The app's "Connect Claude Code" / `install.sh <folder>` writes the hooks into the
+     personal `.claude/settings.local.json` Claude Code actually reads: the folder's own, or
+     the git repository root's when the folder is inside a repo (Claude Code reads the local
+     file from the repo root, also from subfolders and worktrees; not when the root is $HOME).
+     Backed up first; the file and its backups go to `.git/info/exclude`. Skipped when the
+     plugin is already enabled.
    There is a single hook script: `plugins/pixelbuddy/scripts/pixelbuddy-hook.sh`.
-2. The app stores the watched folder and drops any event whose `cwd` is outside it.
+2. The app stores the watched folder and drops any event whose `cwd` is outside it. A `cwd`
+   inside a git worktree is first mapped to the same path in the main checkout (read from the
+   worktree's `.git` file → `commondir`), so worktree sessions count as the original repo.
+   `PixelBuddy --debug-paths <folder> <cwd>` prints how a path is classified.
 The hook writes only session id, cwd, event, tool name / notification type and time to
 `~/Library/Application Support/PixelBuddy/sessions/<session_id>.json` (dir 700, files 600).
 It must be instant, print nothing (UserPromptSubmit stdout goes into Claude's context) and
