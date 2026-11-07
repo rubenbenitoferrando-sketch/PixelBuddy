@@ -1,0 +1,92 @@
+{
+  "id": "astronauta",
+  "prefix": "astronauta",
+  "name": {
+    "es": "Astronauta",
+    "en": "Astronaut"
+  },
+  "frameSize": [
+    32,
+    32
+  ],
+  "variants": [
+    "azul",
+    "rojo",
+    "verde",
+    "morado",
+    "naranja",
+    "amarillo"
+  ],
+  "states": {
+    "idle": {
+      "frames": 4,
+      "fps": 4,
+      "loopFrom": 0,
+      "frameSize": [
+        32,
+        32
+      ],
+      "anchorX": 16
+    },
+    "run": {
+      "frames": 6,
+      "fps": 12,
+      "loopFrom": 0,
+      "frameSize": [
+        48,
+        32
+      ],
+      "anchorX": 32
+    },
+    "katana": {
+      "frames": 6,
+      "fps": 6,
+      "loopFrom": 2,
+      "frameSize": [
+        40,
+        32
+      ],
+      "anchorX": 16
+    },
+    "train": {
+      "frames": 4,
+      "fps": 6,
+      "loopFrom": 0,
+      "frameSize": [
+        32,
+        32
+      ],
+      "anchorX": 16
+    },
+    "sleep": {
+      "frames": 4,
+      "fps": 2,
+      "loopFrom": 0,
+      "frameSize": [
+        32,
+        32
+      ],
+      "anchorX": 16
+    },
+    "alert": {
+      "frames": 4,
+      "fps": 4,
+      "loopFrom": 0,
+      "frameSize": [
+        40,
+        32
+      ],
+      "anchorX": 16
+    },
+    "ask": {
+      "frames": 4,
+      "fps": 4,
+      "loopFrom": 0,
+      "frameSize": [
+        40,
+        32
+      ],
+      "anchorX": 16
+    }
+  }
+}

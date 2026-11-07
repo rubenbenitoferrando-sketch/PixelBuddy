@@ -1,0 +1,12 @@
+.build/
+build/
+*.app
+.DS_Store
+.claude/settings.local.json
+
+# Notas personales: se quedan en este Mac, nunca se publican
+privado/
+
+# Archivos de otras herramientas
+.Rhistory
+.RData

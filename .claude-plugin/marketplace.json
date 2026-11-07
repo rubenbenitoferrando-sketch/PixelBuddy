@@ -1,0 +1,14 @@
+{
+  "name": "pixelbuddy",
+  "description": "PixelBuddy: un compañero pixel art en tu Mac que reacciona a Claude Code.",
+  "owner": {
+    "name": "Rubén Benito Ferrando"
+  },
+  "plugins": [
+    {
+      "name": "pixelbuddy",
+      "source": "./plugins/pixelbuddy",
+      "description": "Hooks que avisan a la app PixelBuddy (macOS) de lo que hace Claude Code."
+    }
+  ]
+}
