@@ -190,7 +190,53 @@ func gallery() -> NSBitmapImageRep {
     }
 }
 
+// MARK: - Imagen para compartir (GitHub › Settings › Social preview, 1280×640)
+
+func socialPreview() -> NSBitmapImageRep {
+    let W = 1280, H = 640
+    return render(width: W, height: H) { ctx in
+        // cielo nocturno en franjas de "píxel", como el icono
+        for y in stride(from: 0, to: H, by: 16) {
+            let t = CGFloat(y) / CGFloat(H)
+            rgb(Int(52 - 28 * t), Int(58 - 30 * t), Int(120 - 54 * t)).setFill()
+            CGRect(x: 0, y: y, width: W, height: 16).fill()
+        }
+        rgb(235, 240, 255).setFill()
+        for (x, y, sz) in [(80, 560, 12), (260, 600, 8), (470, 520, 12), (720, 590, 8), (930, 540, 12),
+                           (1160, 600, 8), (1210, 470, 12), (60, 420, 8), (1100, 380, 8), (640, 470, 8)] {
+            CGRect(x: x, y: y, width: sz, height: sz).fill()
+        }
+        // suelo
+        rgb(30, 34, 70).setFill(); CGRect(x: 0, y: 0, width: W, height: 120).fill()
+        rgb(70, 78, 140).setFill(); CGRect(x: 0, y: 112, width: W, height: 8).fill()
+        // título
+        let shadow = NSShadow(); shadow.shadowColor = rgb(0, 0, 0, 0.5); shadow.shadowBlurRadius = 6
+        let title = NSAttributedString(string: "PixelBuddy", attributes: [
+            .font: NSFont.systemFont(ofSize: 96, weight: .heavy), .foregroundColor: rgb(255, 255, 255),
+            .shadow: shadow])
+        title.draw(at: NSPoint(x: (CGFloat(W) - title.size().width) / 2, y: 430))
+        let sub = NSAttributedString(
+            string: "Pixel art buddies for your Mac that react to Claude Code",
+            attributes: [.font: NSFont.systemFont(ofSize: 34, weight: .medium),
+                         .foregroundColor: rgb(214, 222, 255), .shadow: shadow])
+        sub.draw(at: NSPoint(x: (CGFloat(W) - sub.size().width) / 2, y: 370))
+        // los 10 personajes en fila, de pie sobre el suelo
+        let row: [(String, String, String, Int)] = [
+            ("ninja", "azul", "katana", 4), ("astronauta", "rojo", "idle", 0),
+            ("programador", "verde", "idle", 0), ("futbolista", "morado", "idle", 0),
+            ("baloncestista", "naranja", "idle", 0), ("piloto", "amarillo", "idle", 0),
+            ("perro", "husky", "idle", 0), ("bombero", "rojo", "idle", 0),
+            ("estudiante", "azul", "idle", 0), ("tenista", "verde", "idle", 0)]
+        let s: CGFloat = 3.5, step: CGFloat = 118
+        let x0 = (CGFloat(W) - step * CGFloat(row.count - 1)) / 2
+        for (i, (id, v, st, f)) in row.enumerated() {
+            draw(sprite(id, v, st, f), cx: x0 + CGFloat(i) * step, baseY: 96, scale: s, in: ctx)
+        }
+    }
+}
+
 try? FileManager.default.createDirectory(at: docs, withIntermediateDirectories: true)
+save(socialPreview(), "social_preview.png")
 save(scene(lang: "en"), "scene_en.png")
 save(scene(lang: "es"), "scene_es.png")
 save(gallery(), "gallery.png")
