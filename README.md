@@ -45,11 +45,36 @@ beagle, dachshund, pug), with a collar in the session color.
 
 ## Requirements
 
-- macOS 14 Sonoma or later
-- Xcode Command Line Tools (`xcode-select --install`; full Xcode is not needed)
+- macOS 14 Sonoma or later (Apple Silicon or Intel)
 - Claude Code (desktop app or CLI)
 
 ## Install
+
+Pick one of these three ways. The first two need nothing else.
+
+### A. One command (easiest)
+
+Open the **Terminal** app and paste:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rubenbenitoferrando-sketch/PixelBuddy/main/scripts/get.sh | bash
+```
+
+It downloads the ready-made app from [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest),
+installs it in `~/Applications` and opens it.
+
+### B. Download the app
+
+1. Download **PixelBuddy.zip** from [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest)
+   and double-click it.
+2. Drag **PixelBuddy.app** to your Applications folder and open it.
+3. The first time, macOS says it can't verify the developer (the app isn't notarized by Apple,
+   which costs money). Click **Done**, then go to *System Settings › Privacy & Security*,
+   scroll down and click **Open Anyway**. You only do this once.
+
+### C. Build it yourself
+
+Needs the Xcode Command Line Tools (`xcode-select --install`; full Xcode is not needed).
 
 ```bash
 git clone https://github.com/rubenbenitoferrando-sketch/PixelBuddy.git
@@ -64,8 +89,9 @@ The script builds the app on your Mac and installs it in `~/Applications`.
 > It's harmless (XCTest is only used for tests, which PixelBuddy doesn't need): just let the
 > script finish.
 
-PixelBuddy then
-opens a welcome window where you:
+### First launch
+
+PixelBuddy opens a welcome window where you:
 
 1. pick your character,
 2. choose your project folder — and tick **Connect Claude Code**. It adds PixelBuddy's hooks
@@ -129,6 +155,9 @@ The ninja and astronaut are generated with `tools/make_sprites.py` and
 
 - Swift Package (macOS 14+) in `Sources/PixelBuddy/`. `scripts/build_app.sh` builds with
   `swift build -c release`, assembles `PixelBuddy.app`, signs it and installs it.
+  `scripts/build_app.sh --release` builds a universal (Apple Silicon + Intel), ad-hoc signed
+  app and leaves `build/PixelBuddy.zip` to attach to a GitHub release (`scripts/get.sh`
+  downloads the latest one).
 - `scripts/simulate.sh` plays fake sessions through every state, without real work.
 - README images: `swift tools/make_readme_images.swift` (scenes and gallery) and
   `python3 tools/make_readme_gif.py` (animation).
@@ -186,15 +215,36 @@ salchicha y carlino) y lleva un collar del color de su sesión.
 
 ### Qué necesitas
 
-- macOS 14 Sonoma o posterior.
-- Las herramientas de línea de comandos de Xcode (*Command Line Tools*). Si no las tienes,
-  abre la app **Terminal** y escribe `xcode-select --install`; no hace falta Xcode completo.
+- macOS 14 Sonoma o posterior (Mac con Apple Silicon o Intel).
 - Claude Code (la app de escritorio o la versión de terminal).
 
 ### Instalación
 
-Abre la app **Terminal** (está en *Aplicaciones › Utilidades*) y copia estos tres comandos,
-uno detrás de otro:
+Elige una de estas tres formas. Las dos primeras no necesitan nada más.
+
+**A. Con un solo comando (la más fácil).** Abre la app **Terminal** (está en
+*Aplicaciones › Utilidades*), pega esto y pulsa Intro:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/rubenbenitoferrando-sketch/PixelBuddy/main/scripts/get.sh | bash
+```
+
+Descarga la app ya hecha desde [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest),
+la instala en tu carpeta `~/Applications` y la abre.
+
+**B. Descargando la app.**
+
+1. Descarga **PixelBuddy.zip** desde [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest)
+   y haz doble clic en él.
+2. Arrastra **PixelBuddy.app** a tu carpeta Aplicaciones y ábrela.
+3. La primera vez, macOS dice que no puede verificar al desarrollador (la app no está
+   revisada por Apple, porque eso cuesta dinero). Pulsa **OK**, ve a
+   *Ajustes del Sistema › Privacidad y seguridad*, baja hasta el final y pulsa
+   **Abrir igualmente**. Solo hay que hacerlo una vez.
+
+**C. Compilándola tú.** Necesitas las herramientas de línea de comandos de Xcode
+(*Command Line Tools*): si no las tienes, escribe `xcode-select --install` en la Terminal;
+no hace falta Xcode completo. Después copia estos tres comandos, uno detrás de otro:
 
 ```bash
 git clone https://github.com/rubenbenitoferrando-sketch/PixelBuddy.git
@@ -211,7 +261,7 @@ cd PixelBuddy
 > Es solo un aviso y no pasa nada (XCTest sirve para pruebas que PixelBuddy no necesita):
 > deja que el script termine.
 
-Al terminar se abre la **ventana de bienvenida**, donde:
+Al abrir PixelBuddy por primera vez aparece la **ventana de bienvenida**, donde:
 
 1. eliges tu personaje;
 2. eliges tu carpeta de proyecto (la que abres en Claude Code) y marcas
