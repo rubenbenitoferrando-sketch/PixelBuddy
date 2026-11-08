@@ -94,6 +94,14 @@ final class Stage: NSObject {
         updateGuardian()
         NotificationCenter.default.addObserver(self, selector: #selector(screensChanged),
             name: NSApplication.didChangeScreenParametersNotification, object: nil)
+        // Al despertar, desbloquear o cambiar de escritorio macOS puede sacar el panel de
+        // pantalla sin avisar: se vuelve a poner delante.
+        let ws = NSWorkspace.shared.notificationCenter
+        for name in [NSWorkspace.didWakeNotification, NSWorkspace.screensDidWakeNotification,
+                     NSWorkspace.sessionDidBecomeActiveNotification,
+                     NSWorkspace.activeSpaceDidChangeNotification] {
+            ws.addObserver(self, selector: #selector(screensChanged), name: name, object: nil)
+        }
         scheduleTimer(interval: Stage.fastInterval)
         panel.orderFrontRegardless()
     }
@@ -130,7 +138,16 @@ final class Stage: NSObject {
         }
     }
 
-    @objc private func screensChanged() { layoutWindow() }
+    @objc private func screensChanged() { layoutWindow(); ensureOnScreen() }
+
+    /// Si macOS ha quitado el panel de la pantalla (reposo, bloqueo, otro escritorio…),
+    /// lo vuelve a mostrar. No roba el foco: es un panel que no se activa.
+    private func ensureOnScreen() {
+        guard !isHidden else { return }
+        if !panel.isVisible || !panel.isOnActiveSpace || !panel.occlusionState.contains(.visible) {
+            panel.orderFrontRegardless()
+        }
+    }
 
     func setHidden(_ hidden: Bool) {
         isHidden = hidden
@@ -250,7 +267,7 @@ final class Stage: NSObject {
         lastTick = now
         let wall = Date().timeIntervalSince1970
 
-        if now - lastLayoutCheck > 2 { lastLayoutCheck = now; layoutWindow() }
+        if now - lastLayoutCheck > 2 { lastLayoutCheck = now; layoutWindow(); ensureOnScreen() }
 
         for n in ninjas where !n.isGuardian && wall - n.lastEvent >= Ninja.forgetAfter {
             removeNinja(n)
