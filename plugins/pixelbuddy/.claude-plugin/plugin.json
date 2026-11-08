@@ -1,14 +1,15 @@
 {
   "name": "pixelbuddy",
   "displayName": "PixelBuddy",
-  "version": "1.0.0",
-  "description": "Avisa a la app PixelBuddy (macOS) de lo que hace Claude Code: tu ninja o astronauta pixel art corre, celebra, pregunta o duerme.",
+  "version": "1.2.0",
+  "description": "Avisa a la app PixelBuddy (macOS y Windows) de lo que hace Claude Code: tu personaje pixel art corre, celebra, pregunta o duerme.",
   "author": {
     "name": "Rubén Benito Ferrando"
   },
   "license": "MIT",
   "keywords": [
     "macos",
+    "windows",
     "pixel-art",
     "status",
     "companion"

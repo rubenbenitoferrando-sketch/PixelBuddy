@@ -55,9 +55,43 @@ sealed class PixelBuddyApp : ApplicationContext
             Login.Refresh();
         }
 
-        // Primera vez (sin carpeta): se pide la carpeta del proyecto.
+        // Primera vez (sin carpeta): la bienvenida se encarga de todo, calendario incluido.
         if (Settings.WatchedFolder == null)
-            Stage.Window.BeginInvoke(() => ChooseFolder(firstTime: true));
+            Stage.Window.BeginInvoke(ShowWelcome);
+    }
+
+    WelcomeForm? welcome;
+    GuideForm? guide;
+
+    /// Abre la ventana de bienvenida / configuración (o la trae delante si ya está abierta).
+    public void ShowWelcome()
+    {
+        if (welcome == null || welcome.IsDisposed)
+        {
+            welcome = new WelcomeForm(this);
+            welcome.FormClosed += (_, _) => welcome = null;
+            welcome.Show();
+        }
+        Bring(welcome);
+    }
+
+    /// Abre la ventana "Cómo funciona" con el personaje elegido.
+    public void ShowGuide()
+    {
+        if (guide == null || guide.IsDisposed)
+        {
+            guide = new GuideForm(Stage.Sprites);
+            guide.FormClosed += (_, _) => guide = null;
+            guide.Show();
+        }
+        Bring(guide);
+    }
+
+    static void Bring(Form f)
+    {
+        if (f.WindowState == FormWindowState.Minimized) f.WindowState = FormWindowState.Normal;
+        f.Activate();
+        f.BringToFront();
     }
 
     /// Solo cuentan las sesiones cuyo `cwd` está dentro de la carpeta vigilada.
@@ -161,10 +195,8 @@ sealed class PixelBuddyApp : ApplicationContext
         tray.UpdateIcon(lib);
     }
 
-    public void ChooseFolder(bool firstTime)
+    public void ChooseFolder()
     {
-        if (firstTime)
-            MessageBox.Show(L.T("first.body"), L.T("first.title"), MessageBoxButtons.OK, MessageBoxIcon.Information);
         while (true)
         {
             using var dlg = new FolderBrowserDialog
@@ -210,6 +242,24 @@ sealed class PixelBuddyApp : ApplicationContext
         Settings.Save();
         Stage.RemoveAllSessions();
         watcher.RescanAll();
+    }
+
+    /// Desinstalar: quita los hooks, el arranque con Windows, el permiso de Google y los datos
+    /// de %LOCALAPPDATA%\PixelBuddy. Después solo queda borrar la carpeta de la app.
+    public void Uninstall()
+    {
+        var ask = MessageBox.Show(L.T("uninstall.ask"), L.T("uninstall.title"),
+            MessageBoxButtons.OKCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2);
+        if (ask != DialogResult.OK) return;
+        if (Settings.WatchedFolder is { } f)
+            try { HookInstaller.Uninstall(f); } catch { }
+        Login.Remove();
+        if (Calendar.State == GoogleCalendar.Status.Connected) Calendar.Disconnect();
+        // Se borran los datos al salir (el hook puede estar en uso justo ahora).
+        Quit();
+        try { Directory.Delete(Paths.SupportDir, recursive: true); } catch { }
+        MessageBox.Show(L.T("uninstall.done", AppContext.BaseDirectory.TrimEnd('\\')), L.T("uninstall.title"),
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
     }
 
     public void Quit() => ExitThread();

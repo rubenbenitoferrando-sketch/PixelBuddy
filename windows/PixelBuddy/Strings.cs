@@ -78,10 +78,80 @@ static class L
         ["err.noHook"] = ("Falta pixelbuddy-hook.exe junto a PixelBuddy.exe. Vuelve a descomprimir la app.",
                           "pixelbuddy-hook.exe is missing next to PixelBuddy.exe. Please unzip the app again."),
         ["alert.folderFail"] = ("No he podido conectar Claude Code en esa carpeta", "Couldn't connect Claude Code in that folder"),
-        ["first.title"] = ("Bienvenido a PixelBuddy", "Welcome to PixelBuddy"),
-        ["first.body"] = (
-            "Tu personaje vive encima de la barra de tareas y reacciona a lo que hace Claude Code.\n\nAhora elige tu carpeta de proyecto: solo reaccionará a las sesiones de Claude Code abiertas en ella (y sus subcarpetas).\n\nPuedes cambiarla cuando quieras desde el icono de PixelBuddy, junto al reloj.",
-            "Your buddy lives above the taskbar and reacts to what Claude Code is doing.\n\nNow choose your project folder: it only reacts to Claude Code sessions opened in it (and its subfolders).\n\nYou can change it anytime from the PixelBuddy icon next to the clock."),
+        ["menu.setup"] = ("Configurar PixelBuddy…", "Set up PixelBuddy…"),
+        ["menu.guide"] = ("Cómo funciona…", "How it works…"),
+        ["menu.uninstall"] = ("Desinstalar PixelBuddy…", "Uninstall PixelBuddy…"),
+        ["uninstall.title"] = ("Desinstalar PixelBuddy", "Uninstall PixelBuddy"),
+        ["uninstall.ask"] = (
+            "Se quitarán los avisos de Claude Code de tu carpeta, el arranque con Windows, el permiso de Google Calendar y los ajustes de PixelBuddy, y la app se cerrará.\n\n¿Continuar?",
+            "This removes the Claude Code hooks from your folder, Open at sign-in, the Google Calendar access and PixelBuddy's settings, and quits the app.\n\nContinue?"),
+        ["uninstall.done"] = (
+            "Listo. Ahora borra la carpeta de la app:\n{0}\n\nSi usabas el plugin, quítalo en Claude Code con:\n/plugin uninstall pixelbuddy@pixelbuddy",
+            "Done. Now delete the app folder:\n{0}\n\nIf you used the plugin, remove it in Claude Code with:\n/plugin uninstall pixelbuddy@pixelbuddy"),
+
+        // Bienvenida
+        ["welcome.title"] = ("Bienvenido a PixelBuddy", "Welcome to PixelBuddy"),
+        ["welcome.intro"] = (
+            "Un compañero pixel art que vive encima de la barra de tareas, reacciona a lo que hace Claude Code y te enseña tu calendario con un clic.",
+            "A pixel art buddy that lives above your taskbar, reacts to what Claude Code is doing and shows your calendar with one click."),
+        ["welcome.step1"] = ("1. Elige tu personaje", "1. Pick your character"),
+        ["welcome.step2"] = ("2. Elige tu carpeta de proyecto", "2. Choose your project folder"),
+        ["welcome.step2.help"] = (
+            "Solo reaccionará a las sesiones de Claude Code abiertas en esta carpeta (y sus subcarpetas).",
+            "It only reacts to Claude Code sessions opened in this folder (and its subfolders)."),
+        ["welcome.chooseFolder"] = ("Elegir carpeta…", "Choose folder…"),
+        ["welcome.connect"] = ("Conectar Claude Code en esta carpeta (recomendado)",
+                               "Connect Claude Code in this folder (recommended)"),
+        ["welcome.connect.help"] = (
+            "Añade los avisos de PixelBuddy a .claude\\settings.local.json de la carpeta (archivo personal, con copia de seguridad). ¿Prefieres el plugin? En Claude Code: /plugin install pixelbuddy@pixelbuddy",
+            "Adds PixelBuddy's hooks to the folder's .claude\\settings.local.json (a personal file, backed up first). Prefer the plugin? In Claude Code: /plugin install pixelbuddy@pixelbuddy"),
+        ["welcome.step3"] = ("3. Google Calendar (opcional)", "3. Google Calendar (optional)"),
+        ["welcome.step3.help"] = (
+            "Al hacer clic en tu personaje verás el evento actual y el siguiente. PixelBuddy solo lee tu calendario: los eventos no se guardan ni salen de tu PC.",
+            "Click your buddy to see your current and next event. PixelBuddy only reads your calendar: events aren't saved and never leave your PC."),
+        ["welcome.grant"] = ("Conectar Google Calendar", "Connect Google Calendar"),
+        ["welcome.granted"] = ("✓ Conectado", "✓ Connected"),
+        ["welcome.connectedAs"] = ("✓ Conectado: {0}", "✓ Connected: {0}"),
+        ["welcome.start"] = ("Empezar", "Start"),
+        ["welcome.needFolder"] = ("Elige primero una carpeta de proyecto.", "Choose a project folder first."),
+
+        // Cómo funciona
+        ["guide.title"] = ("Cómo funciona PixelBuddy", "How PixelBuddy works"),
+        ["guide.intro"] = (
+            "Tu personaje vive encima de la barra de tareas y te cuenta de un vistazo qué hace Claude Code.",
+            "Your buddy lives above the taskbar and tells you at a glance what Claude Code is doing."),
+        ["guide.run.t"] = ("Trabaja", "Working"),
+        ["guide.run.d"] = ("Claude está trabajando. Va de un lado a otro hasta que acaba.",
+                           "Claude is working. It moves back and forth until it's done."),
+        ["guide.katana.t"] = ("Ha terminado", "Done"),
+        ["guide.katana.d"] = ("Claude ha acabado. Lo celebra durante 30 segundos: ya puedes revisar su trabajo.",
+                              "Claude has finished. It celebrates for 30 seconds: time to check the result."),
+        ["guide.ask.t"] = ("Te pregunta", "Needs you"),
+        ["guide.ask.d"] = ("Claude te hace una pregunta o necesita tu permiso. Ve a Claude Code a contestar.",
+                           "Claude has a question or needs your permission. Go to Claude Code to answer."),
+        ["guide.alert.t"] = ("Error", "Error"),
+        ["guide.alert.d"] = ("Claude se ha parado por un error (límite de uso, conexión…) y necesita tu ayuda.",
+                             "Claude stopped on an error (usage limit, connection…) and needs your help."),
+        ["guide.train.t"] = ("Te espera", "Waiting"),
+        ["guide.train.d"] = ("Claude espera tu siguiente mensaje. Al cabo de 1 minuto se duerme.",
+                             "Claude is waiting for your next message. After 1 minute it falls asleep."),
+        ["guide.sleep.t"] = ("Duerme", "Sleeping"),
+        ["guide.sleep.d"] = ("No hay actividad. Se despierta en cuanto vuelvas a escribir a Claude.",
+                             "Nothing is happening. It wakes up as soon as you write to Claude again."),
+        ["guide.more"] = ("Más cosas", "Good to know"),
+        ["guide.tip1"] = (
+            "Puedes tener varias sesiones de Claude Code a la vez en tu carpeta: cada una tiene su personaje y su color (la 1.ª azul, la 2.ª roja, luego verde, morada…) y funcionan por separado. Si no hay sesiones, queda el principal.",
+            "You can run several Claude Code sessions at once in your folder: each gets its own buddy and color (1st blue, 2nd red, then green, purple…) and they work independently. With no sessions, the main buddy stays."),
+        ["guide.tip2"] = ("Haz clic en un personaje para ver tu evento actual y el siguiente de hoy.",
+                          "Click a buddy to see your current event and your next one today."),
+        ["guide.tip3"] = ("Con ✕ Quitar, en el bocadillo, retiras el personaje de una sesión que ya no usas.",
+                          "Use ✕ Remove in the bubble to dismiss the buddy of a session you no longer use."),
+        ["guide.tip4"] = (
+            "Desde el icono de PixelBuddy junto al reloj (quizá dentro de la flecha ^) cambias de personaje, los ocultas, eliges calendarios o la carpeta.",
+            "From the PixelBuddy icon next to the clock (maybe inside the ^ arrow) you can switch character, hide buddies, pick calendars or the folder."),
+        ["guide.tip5"] = ("Si una sesión no hace reaccionar al personaje, ciérrala y vuelve a abrirla en Claude Code.",
+                          "If a session doesn't make your buddy react, close it and reopen it in Claude Code."),
+        ["guide.ok"] = ("Entendido", "Got it"),
 
         // Bocadillo
         ["bubble.noCalTitle"] = ("SIN CALENDARIO", "NO CALENDAR"),

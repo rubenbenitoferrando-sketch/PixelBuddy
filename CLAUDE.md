@@ -1,8 +1,9 @@
-# PixelBuddy — pixel art buddies for macOS that react to Claude Code
+# PixelBuddy — pixel art buddies for macOS and Windows that react to Claude Code
 
 Native macOS app (Swift, no dependencies) that shows a small pixel art character above the
 Dock (bottom-left). It reacts to what Claude Code is doing and shows the current calendar
-event when clicked. 10 characters to choose from.
+event when clicked. 10 characters to choose from. A Windows version (C#, see "Windows" below)
+does the same above the taskbar, with the same assets, states and rules.
 
 ## Privacy rule (both layers are required)
 The buddy reacts ONLY to Claude Code sessions opened in the watched project folder (and its
@@ -25,7 +26,8 @@ subfolders). Everything else is ignored.
 The hook writes only session id, cwd, event, tool name / notification type and time to
 `~/Library/Application Support/PixelBuddy/sessions/<session_id>.json` (dir 700, files 600).
 It must be instant, print nothing (UserPromptSubmit stdout goes into Claude's context) and
-always exit 0. No network access anywhere.
+always exit 0. No network access anywhere, with one exception approved by the owner: the
+Windows version talks to Google (OAuth + Calendar API, read-only) for Google Calendar.
 
 ## Decisions already made (don't change without asking)
 - Characters live in `assets/avatars/<id>/`: `<prefix>_<variant>_<state>.png` (32×32 frames
@@ -68,5 +70,28 @@ always exit 0. No network access anywhere.
   app). Data in `~/Library/Application Support/PixelBuddy/`.
 - Signing: local certificate "PixelBuddy Local" (or "NinjaDock Local") if present, else
   ad-hoc. Zero cost, no paid services, no external dependencies.
+
+## Windows (`windows/`)
+- C# / .NET 10 / WinForms, no NuGet packages. `windows/build.sh` builds self-contained
+  single-file zips (x64 + ARM) into `windows/dist/` (also from the Mac: .NET SDK in `~/.dotnet`).
+  Keep it behaviour-identical to the Mac app (same states, timers, colours, bubble, privacy).
+- Layered per-pixel-alpha window above the taskbar (`StageWindow`, `UpdateLayeredWindow`);
+  clicks pass through except on buddies (alpha-1 hit area) and the bubble. Tray icon menu.
+  Sprites scaled by an integer factor (≈2 × display scale) with nearest-neighbour.
+- Data in `%LOCALAPPDATA%\PixelBuddy\` (settings.json, sessions\, google-token.bin,
+  pixelbuddy-hook.exe copy). Open at sign-in via HKCU Run.
+- Hook: `windows/PixelBuddyHook` (Native AOT console exe, same JSON as the Mac hook).
+  "Connect Claude Code" writes **exec-form** hooks (`command` = hook exe path, `args` = event,
+  `onFailure: continue`) so no Git Bash/PowerShell is needed and a failure never blocks Claude.
+  The shared plugin script detects Windows (`$WINDIR`) and execs the hook exe from
+  `%LOCALAPPDATA%\PixelBuddy\`; all plugin hooks have `onFailure: continue`.
+- Google Calendar: OAuth desktop flow with PKCE and a 127.0.0.1 loopback listener, scope
+  `calendar.readonly`. Events only in memory; refresh token encrypted with DPAPI. The OAuth
+  client id/secret are injected at build time (`windows/google-oauth.env`, gitignored, or the
+  repo secrets in `.github/workflows/release.yml`) — never commit them. Privacy policy:
+  `docs/privacy.html` (GitHub Pages); keep it in sync with what the app does.
+- Releases: a `v…` tag runs `.github/workflows/release.yml` (Mac + Windows zips → draft
+  release). Every release must include `PixelBuddy.zip` (Mac): `scripts/get.sh` downloads it
+  from the latest release.
 
 @privado/CLAUDE-personal.md

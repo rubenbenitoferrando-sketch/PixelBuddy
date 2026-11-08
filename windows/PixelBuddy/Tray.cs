@@ -72,11 +72,14 @@ sealed class Tray : IDisposable
             Enabled = false,
             ToolTipText = folder,
         });
-        Add(menu.Items, L.T("menu.changeFolder"), () => app.ChooseFolder(firstTime: false));
+        Add(menu.Items, L.T("menu.changeFolder"), app.ChooseFolder);
+        Add(menu.Items, L.T("menu.setup"), app.ShowWelcome);
+        Add(menu.Items, L.T("menu.guide"), app.ShowGuide);
         menu.Items.Add(new ToolStripSeparator());
 
         var login = Add(menu.Items, L.T("menu.login"), () => Login.Set(!Login.Enabled));
         login.Checked = Login.Enabled;
+        Add(menu.Items, L.T("menu.uninstall"), app.Uninstall);
         menu.Items.Add(new ToolStripSeparator());
         Add(menu.Items, L.T("menu.quit"), app.Quit);
     }

@@ -2,10 +2,12 @@
 
 # PixelBuddy
 
-A tiny pixel art buddy that lives above your Dock on macOS, reacts to what **Claude Code**
-is doing, and shows your calendar with one click. Pick one of **10 characters**: ninja,
-astronaut, developer, footballer, basketball player, F1 driver, dog, firefighter, student or
-tennis player.
+A tiny pixel art buddy that lives above your Dock on **macOS** or your taskbar on **Windows**,
+reacts to what **Claude Code** is doing, and shows your calendar with one click. Pick one of
+**10 characters**: ninja, astronaut, developer, footballer, basketball player, F1 driver, dog,
+firefighter, student or tennis player.
+
+> **On Windows?** Jump to [Windows](#windows).
 
 *[Leer en español ↓](#español)*
 
@@ -33,7 +35,8 @@ tennis player.
 - It only reacts to sessions opened in **your project folder** (and its subfolders). Git
   repositories and worktrees are supported: a session in a worktree counts as the original
   repository.
-- Native Swift app, no dependencies, no network, free.
+- Native app (Swift on macOS, C# on Windows), no dependencies, free. The macOS version never
+  connects to the internet; the Windows version connects only to Google, to read your calendar.
 
 ## Characters
 
@@ -45,10 +48,10 @@ beagle, dachshund, pug), with a collar in the session color.
 
 ## Requirements
 
-- macOS 14 Sonoma or later (Apple Silicon or Intel)
+- macOS 14 Sonoma or later (Apple Silicon or Intel), or Windows 10/11 ([see Windows](#windows))
 - Claude Code (desktop app or CLI)
 
-## Install
+## Install (macOS)
 
 Pick one of these three ways. The first two need nothing else.
 
@@ -126,11 +129,12 @@ just tells it what Claude Code is doing.
 
 ## Privacy
 
-Everything stays on your Mac. The hook writes one small file per session to
+On macOS everything stays on your Mac. The hook writes one small file per session to
 `~/Library/Application Support/PixelBuddy/sessions/` with the session id, folder, event name,
 tool name or notification type, and time — nothing from your prompts or code. Events from
-other folders are ignored. The calendar is read locally through EventKit. PixelBuddy makes no
-network requests.
+other folders are ignored. The calendar is read locally through EventKit. The macOS version
+makes no network requests. On Windows, see [Windows › Privacy](#privacy-on-windows). Full
+details: [privacy policy](https://rubenbenitoferrando-sketch.github.io/PixelBuddy/privacy.html).
 
 ## Uninstall
 
@@ -141,6 +145,57 @@ network requests.
 It removes the hooks from your project folder, the login item, the app, its data and its
 settings (backups of `settings.local.json` are kept). If you used the plugin:
 `/plugin uninstall pixelbuddy@pixelbuddy`.
+
+## Windows
+
+The same buddies, characters and states, above the Windows taskbar (bottom left), with your
+**Google Calendar** in the bubble.
+
+**Requirements:** Windows 10 or 11 (Intel/AMD or ARM) and Claude Code. Nothing else to install.
+
+**Install**
+
+1. Download from [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest)
+   **PixelBuddy-Windows-x64.zip** (most PCs) or **PixelBuddy-Windows-ARM.zip** (Snapdragon and
+   other ARM PCs).
+2. Unzip it wherever you like (for example in `Documents`) and open **PixelBuddy.exe**.
+3. The first time, Windows says *"Windows protected your PC"* (the app isn't signed, which costs
+   money): click **More info → Run anyway**.
+4. The welcome window asks you to pick a character, choose your project folder (tick
+   **Connect Claude Code**) and, optionally, connect Google Calendar. It also turns on *Open at
+   sign-in*.
+
+Close and reopen your Claude Code sessions in that folder, and your buddy comes to life. The
+PixelBuddy icon sits next to the clock (maybe inside the **^** arrow): character, show/hide,
+calendars, folder, set up, *How it works…*, open at sign-in, uninstall and quit.
+
+**Google Calendar.** *Calendars → Connect Google Calendar…* opens your browser: sign in and allow
+read-only access. Google may warn that the app isn't verified yet; click **Continue**. Your
+current and next event appear when you click a buddy. All-day events aren't shown, nor
+cancelled or declined ones. Choose which calendars to show in the same menu.
+
+**Claude Code.** *Connect Claude Code* adds the hooks to your personal
+`.claude\settings.local.json` (backed up first, kept out of git) using Claude Code's *exec form*:
+they launch `pixelbuddy-hook.exe` directly, with no Git Bash or PowerShell, and with
+`onFailure: continue`, so a hook problem can never block Claude. The
+[plugin](#prefer-the-claude-code-plugin) works too if Git for Windows is installed.
+
+<a id="privacy-on-windows"></a>**Privacy on Windows.** Session files are kept in
+`%LOCALAPPDATA%\PixelBuddy\sessions\`, as on macOS. The only network access is to Google
+(`accounts.google.com`, `oauth2.googleapis.com`, `www.googleapis.com`), and only to read
+your calendar. Events stay in memory and are never saved or sent anywhere. The Google permission
+is stored encrypted with your Windows account (DPAPI). Disconnecting deletes it and revokes it.
+[Privacy policy](https://rubenbenitoferrando-sketch.github.io/PixelBuddy/privacy.html).
+
+**Uninstall.** Use *Uninstall PixelBuddy…* in the menu (removes the hooks, *Open at sign-in*,
+the Google permission and the settings), then delete the app folder. If you used the plugin:
+`/plugin uninstall pixelbuddy@pixelbuddy`.
+
+**Build it yourself.** Needs the [.NET 10 SDK](https://dotnet.microsoft.com/download), on
+Windows, macOS or Linux: run `windows/build.sh`. It leaves the zips in `windows/dist/`.
+Google Calendar needs your own OAuth client ("Desktop app") in `windows/google-oauth.env`.
+Without it, the app works without the calendar. On Windows the hook is compiled to native code.
+From macOS/Linux it's a slower test build.
 
 ## Add your own character
 
@@ -165,6 +220,11 @@ The ninja and astronaut are generated with `tools/make_sprites.py` and
   keeps the Calendar permission across rebuilds (asks for your Mac password once).
 - The hook script is `plugins/pixelbuddy/scripts/pixelbuddy-hook.sh`; the plugin catalog is
   `.claude-plugin/marketplace.json`.
+- Windows version (C#, .NET 10, WinForms, no NuGet packages) in `windows/`: the app in
+  `windows/PixelBuddy/`, the native hook in `windows/PixelBuddyHook/`. `PixelBuddy.exe --demo`
+  plays fake sessions through every state.
+- Releases: pushing a `v…` tag runs `.github/workflows/release.yml`, which builds the Mac and
+  Windows zips on GitHub and creates a draft release.
 
 PixelBuddy is an independent project, not affiliated with or endorsed by Anthropic.
 Claude and Claude Code are trademarks of Anthropic.
@@ -173,10 +233,12 @@ Claude and Claude Code are trademarks of Anthropic.
 
 ## Español
 
-Un pequeño compañero pixel art que vive encima del Dock de tu Mac. Te muestra de un vistazo
-qué está haciendo **Claude Code** y, si haces clic en él, te enseña tu calendario. Puedes
-elegir entre **10 personajes**: ninja, astronauta, programador, futbolista, baloncestista,
-piloto de F1, perro, bombero, estudiante y tenista.
+Un pequeño compañero pixel art que vive encima del Dock de tu **Mac** o de la barra de tareas
+de **Windows**. Te muestra de un vistazo qué está haciendo **Claude Code** y, si haces clic en
+él, te enseña tu calendario. Puedes elegir entre **10 personajes**: ninja, astronauta,
+programador, futbolista, baloncestista, piloto de F1, perro, bombero, estudiante y tenista.
+
+> **¿Usas Windows?** Ve directamente a [En Windows](#en-windows).
 
 <p align="center"><img src="docs/scene_es.png" alt="PixelBuddy encima del Dock: un personaje por cada sesión de Claude Code y el bocadillo del calendario"></p>
 
@@ -203,7 +265,9 @@ piloto de F1, perro, bombero, estudiante y tenista.
 - Solo reacciona a las sesiones que abras en **tu carpeta de proyecto** (y sus subcarpetas).
   Funciona con repositorios git y con *worktrees*: una sesión en una worktree cuenta como si
   estuviera en el repositorio original.
-- Es una app nativa, gratuita, sin dependencias externas y sin conexión a internet.
+- Es una app nativa (Swift en Mac, C# en Windows), gratuita y sin dependencias externas. La de
+  Mac nunca se conecta a internet; la de Windows solo se conecta a Google, para leer tu
+  calendario.
 
 ### Personajes
 
@@ -215,10 +279,11 @@ salchicha y carlino) y lleva un collar del color de su sesión.
 
 ### Qué necesitas
 
-- macOS 14 Sonoma o posterior (Mac con Apple Silicon o Intel).
+- macOS 14 Sonoma o posterior (Mac con Apple Silicon o Intel), o Windows 10/11
+  ([mira En Windows](#en-windows)).
 - Claude Code (la app de escritorio o la versión de terminal).
 
-### Instalación
+### Instalación en Mac
 
 Elige una de estas tres formas. Las dos primeras no necesitan nada más.
 
@@ -302,11 +367,13 @@ para ti). La app sigue siendo necesaria: el plugin solo le cuenta lo que hace Cl
 
 ### Privacidad
 
-Todo se queda en tu Mac. Por cada sesión se guarda un archivo pequeño en
+En Mac, todo se queda en tu Mac. Por cada sesión se guarda un archivo pequeño en
 `~/Library/Application Support/PixelBuddy/sessions/` con el identificador de la sesión, la
 carpeta, el tipo de aviso, el nombre de la herramienta y la hora. **Nunca** se guarda lo que
 escribes ni tu código. Los avisos de otras carpetas se ignoran, el calendario se lee
-directamente en tu Mac y PixelBuddy no se conecta a internet.
+directamente en tu Mac y la versión de Mac no se conecta a internet. Para Windows, mira
+[En Windows](#en-windows). Todos los detalles en la
+[política de privacidad](https://rubenbenitoferrando-sketch.github.io/PixelBuddy/privacy.html).
 
 ### Desinstalar
 
@@ -319,6 +386,50 @@ Desde la carpeta de PixelBuddy, en Terminal:
 Quita los avisos de tu carpeta de proyecto, el arranque al iniciar sesión, la app, sus datos y
 sus ajustes (las copias de seguridad de `settings.local.json` se conservan). Si usaste el
 plugin, escribe también en Claude Code: `/plugin uninstall pixelbuddy@pixelbuddy`.
+
+### En Windows
+
+Los mismos personajes y estados, encima de la barra de tareas de Windows (abajo a la
+izquierda), y con tu **Google Calendar** en el bocadillo.
+
+**Qué necesitas:** Windows 10 u 11 (Intel/AMD o ARM) y Claude Code. Nada más.
+
+**Instalación**
+
+1. Descarga desde [Releases](https://github.com/rubenbenitoferrando-sketch/PixelBuddy/releases/latest)
+   **PixelBuddy-Windows-x64.zip** (la mayoría de PCs) o **PixelBuddy-Windows-ARM.zip** (PCs con
+   chip Snapdragon u otro ARM).
+2. Descomprímelo donde quieras (por ejemplo, en `Documentos`) y abre **PixelBuddy.exe**.
+3. La primera vez, Windows dice *"Windows protegió tu PC"* (la app no está firmada, porque eso
+   cuesta dinero): pulsa **Más información → Ejecutar de todos modos**.
+4. En la ventana de bienvenida eliges tu personaje, tu carpeta de proyecto (marca
+   **Conectar Claude Code**) y, si quieres, conectas Google Calendar. También se activa
+   *Abrir al iniciar Windows*.
+
+Cierra y vuelve a abrir tus sesiones de Claude Code en esa carpeta para que tu personaje
+empiece a reaccionar. El icono de PixelBuddy está junto al reloj (quizá dentro de la flecha
+**^**). Desde él puedes:
+- cambiar de personaje y mostrarlos u ocultarlos;
+- elegir los calendarios y la carpeta;
+- volver a la bienvenida o abrir *Cómo funciona…*;
+- activar o desactivar *Abrir al iniciar Windows*;
+- desinstalar PixelBuddy o salir.
+
+**Google Calendar.** *Calendarios → Conectar Google Calendar…* abre tu navegador: entra en tu
+cuenta y acepta el permiso de solo lectura. Puede que Google avise de que la app aún no está
+verificada; pulsa **Continuar**. Al hacer clic en un personaje verás tu evento actual y el
+siguiente. No se muestran los eventos de todo el día, ni los cancelados, ni los que rechazaste.
+En ese mismo menú eliges qué calendarios mostrar.
+
+**Privacidad en Windows.** Los archivos de sesión se guardan en
+`%LOCALAPPDATA%\PixelBuddy\sessions\`, como en Mac. La app solo se conecta a internet para
+hablar con Google, y solo para leer tu calendario. Los eventos se quedan en memoria: nunca se
+guardan ni se envían a ningún sitio. El permiso de Google se guarda cifrado con tu usuario de
+Windows. Al desconectar se borra y se anula.
+
+**Desinstalar.** En el menú, *Desinstalar PixelBuddy…* quita los avisos, el arranque con
+Windows, el permiso de Google y los ajustes. Después borra la carpeta de la app. Si usaste el
+plugin: `/plugin uninstall pixelbuddy@pixelbuddy`.
 
 ---
 

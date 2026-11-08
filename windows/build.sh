@@ -33,9 +33,12 @@ case "$(uname -s)" in
   *) NATIVE_HOOK=false ;;
 esac
 
+# Arquitecturas: las que se pasen (p. ej. ./build.sh win-x64) o las dos.
+if [ $# -gt 0 ]; then RIDS=("$@"); else RIDS=(win-x64 win-arm64); fi
+
 rm -rf "$BUILD"
 mkdir -p "$DIST"
-for rid in win-x64 win-arm64; do
+for rid in "${RIDS[@]}"; do
   out="$BUILD/$rid/PixelBuddy"
   echo "▶ $rid"
   dotnet publish "$HERE/PixelBuddy/PixelBuddy.csproj" -c Release -r "$rid" --self-contained \
@@ -55,8 +58,10 @@ for rid in win-x64 win-arm64; do
   rm -f "$DIST/$name"
   if command -v ditto >/dev/null; then
     (cd "$BUILD/$rid" && ditto -c -k --norsrc --noextattr --noacl --keepParent PixelBuddy "$DIST/$name")
-  else
+  elif command -v zip >/dev/null; then
     (cd "$BUILD/$rid" && zip -qr "$DIST/$name" PixelBuddy)
+  else
+    (cd "$BUILD/$rid" && 7z a -tzip -bso0 "$DIST/$name" PixelBuddy)   # Windows (GitHub Actions)
   fi
 done
 ls -lh "$DIST"
