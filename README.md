@@ -57,7 +57,14 @@ cd PixelBuddy
 ./scripts/install.sh
 ```
 
-The script builds the app on your Mac and installs it in `~/Applications`. PixelBuddy then
+The script builds the app on your Mac and installs it in `~/Applications`.
+
+> With only the Command Line Tools installed (no full Xcode), the build may print
+> `warning: could not determine XCTest paths … unable to lookup item 'PlatformPath'`.
+> It's harmless (XCTest is only used for tests, which PixelBuddy doesn't need): just let the
+> script finish.
+
+PixelBuddy then
 opens a welcome window where you:
 
 1. pick your character,
@@ -198,6 +205,11 @@ cd PixelBuddy
 - El primero descarga PixelBuddy en tu Mac.
 - El segundo entra en la carpeta que se acaba de descargar.
 - El tercero compila la app y la instala en tu carpeta `~/Applications`.
+
+> Si solo tienes las *Command Line Tools* (sin Xcode completo), al compilar puede salir
+> `warning: could not determine XCTest paths … unable to lookup item 'PlatformPath'`.
+> Es solo un aviso y no pasa nada (XCTest sirve para pruebas que PixelBuddy no necesita):
+> deja que el script termine.
 
 Al terminar se abre la **ventana de bienvenida**, donde:
 
