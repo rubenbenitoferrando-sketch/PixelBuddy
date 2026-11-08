@@ -1,0 +1,83 @@
+# Compila PixelBuddy para Mac y Windows y prepara una versi√≥n en GitHub Releases.
+#
+# - Al subir una etiqueta "v‚Ä¶" (p. ej. v1.2): compila todo y crea la versi√≥n como BORRADOR con
+#   PixelBuddy.zip (Mac), PixelBuddy-Windows-x64.zip y PixelBuddy-Windows-ARM.zip. Se revisa y se
+#   publica a mano desde github.com.
+# - A mano (pesta√±a Actions ‚Üí Release ‚Üí Run workflow): solo compila, para probar; los zips quedan
+#   como "artifacts" de esa ejecuci√≥n.
+#
+# El identificador de Google Calendar est√° en los "secrets" del repositorio
+# (PIXELBUDDY_GOOGLE_CLIENT_ID y PIXELBUDDY_GOOGLE_CLIENT_SECRET). No se ejecuta con pull requests,
+# as√≠ que nadie de fuera puede leerlos.
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  windows:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - rid: win-x64
+            os: windows-latest
+            zip: PixelBuddy-Windows-x64.zip
+          - rid: win-arm64
+            os: windows-11-arm
+            zip: PixelBuddy-Windows-ARM.zip
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+      - name: Compilar
+        shell: bash
+        env:
+          PIXELBUDDY_GOOGLE_CLIENT_ID: ${{ secrets.PIXELBUDDY_GOOGLE_CLIENT_ID }}
+          PIXELBUDDY_GOOGLE_CLIENT_SECRET: ${{ secrets.PIXELBUDDY_GOOGLE_CLIENT_SECRET }}
+        run: windows/build.sh ${{ matrix.rid }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.rid }}
+          path: windows/dist/${{ matrix.zip }}
+          if-no-files-found: error
+
+  mac:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compilar (universal, firma ad-hoc)
+        run: scripts/build_app.sh --release
+      - uses: actions/upload-artifact@v4
+        with:
+          name: mac
+          path: build/PixelBuddy.zip
+          if-no-files-found: error
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [windows, mac]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+      - name: Crear la versi√≥n (borrador)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          ls -l dist
+          gh release create "$TAG" dist/*.zip --draft \
+            --title "PixelBuddy ${TAG#v}" --notes-file .github/release-notes.md
