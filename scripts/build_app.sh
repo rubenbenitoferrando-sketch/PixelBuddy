@@ -16,7 +16,7 @@ DEST="$HOME/Applications"
 cd "$ROOT"
 if [ "$RELEASE" = 1 ]; then
   for ARCH in arm64 x86_64; do
-    echo "→ Compilando para $ARCH…"
+    echo "→ Compilando para ${ARCH}…"
     rm -rf "$ROOT/build/release-$ARCH"
     swift build -c release --triple "$ARCH-apple-macosx14.0" \
       --scratch-path "$ROOT/build/release-$ARCH"
@@ -101,7 +101,7 @@ if [ "$RELEASE" = 1 ]; then
   exit 0
 fi
 
-echo "→ Instalando en $DEST…"
+echo "→ Instalando en ${DEST}…"
 mkdir -p "$DEST"
 rm -rf "$DEST/$NAME.app"
 cp -R "$APP" "$DEST/$NAME.app"
