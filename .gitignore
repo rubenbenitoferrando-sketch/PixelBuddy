@@ -10,3 +10,9 @@ privado/
 # Archivos de otras herramientas
 .Rhistory
 .RData
+
+# Versión de Windows: archivos de compilación
+windows/**/bin/
+windows/**/obj/
+windows/dist/
+windows/google-oauth.env

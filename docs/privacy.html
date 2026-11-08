@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PixelBuddy Privacy Policy</title>
+<meta name="description" content="Privacy policy of PixelBuddy for macOS and Windows: what it reads, what it stores and who it talks to.">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #fffcf2; --ink: #12121e; --muted: #55556a; --accent: #1c4fa0;
+    --card: #ffffff; --line: #12121e; --shade: rgba(0,0,0,.18); --code: #f1ede0;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #15151f; --ink: #f3f0e6; --muted: #a9a8b8; --accent: #8fb4ff;
+      --card: #1e1e2b; --line: #f3f0e6; --shade: rgba(0,0,0,.5); --code: #2a2a3a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.6 ui-monospace, "SF Mono", Consolas, "Cascadia Mono", Menlo, monospace;
+  }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 64px; }
+  header { display: flex; align-items: center; gap: 16px; margin-bottom: 8px; }
+  header img { width: 64px; height: 64px; image-rendering: pixelated; }
+  h1 { font-size: 26px; margin: 0; line-height: 1.2; }
+  h2 { font-size: 19px; margin: 36px 0 8px; color: var(--accent); }
+  h3 { font-size: 16px; margin: 22px 0 4px; }
+  p, li { margin: 6px 0; }
+  ul { padding-left: 22px; }
+  a { color: var(--accent); }
+  code { background: var(--code); padding: 1px 5px; border-radius: 3px; font-size: 14px; overflow-wrap: anywhere; }
+  .meta { color: var(--muted); font-size: 14px; margin: 0; }
+  .lang { margin: 18px 0 0; font-size: 14px; }
+  .box {
+    background: var(--card); border: 2px solid var(--line); box-shadow: 4px 4px 0 var(--shade);
+    padding: 14px 18px; margin: 20px 0;
+  }
+  .box p { margin: 4px 0; }
+  hr { border: 0; border-top: 2px dashed var(--muted); margin: 56px 0 8px; }
+  footer { margin-top: 48px; color: var(--muted); font-size: 14px; }
+</style>
+</head>
+<body>
+<main>
+
+<header>
+  <img src="icon.png" alt="">
+  <div>
+    <h1>PixelBuddy · Privacy Policy</h1>
+    <p class="meta">Effective date: 8 November 2026</p>
+  </div>
+</header>
+<p class="lang"><a href="#es">Leer en español ↓</a></p>
+
+<div class="box">
+  <p><strong>In short:</strong> PixelBuddy only <em>reads</em> your calendar to show your current and next
+  event. Your events are never saved, sold, shared or sent anywhere. The Windows version talks only to Google;
+  the macOS version doesn't use the internet at all. There are no accounts, ads, analytics or trackers.</p>
+</div>
+
+<p>PixelBuddy is a free, open-source desktop app for macOS and Windows that shows a small pixel art character
+above your Dock or taskbar. The character reacts to what Claude Code is doing and, when you click it, shows
+your current calendar event and your next one today. Its source code is public:
+<a href="https://github.com/rubenbenitoferrando-sketch/PixelBuddy">github.com/rubenbenitoferrando-sketch/PixelBuddy</a>.</p>
+
+<h2>1. Google Calendar (Windows version)</h2>
+<p>If you choose <em>Connect Google Calendar</em>, Google asks you to allow read-only access to your calendars
+(scope <code>https://www.googleapis.com/auth/calendar.readonly</code>). With it, PixelBuddy reads:</p>
+<ul>
+  <li>The list of your calendars (name and identifier), so you can choose which ones to show. The identifier
+    of your primary calendar is your Google email address, which the app shows in its menu.</li>
+  <li>The events from yesterday until the end of today in the calendars you choose: title, start and end
+    time, status, event type and whether you declined it.</li>
+</ul>
+<p>How this data is used and kept:</p>
+<ul>
+  <li>It is used <strong>only</strong> to show the speech bubble (“Now” and “Next”) on your own computer.</li>
+  <li>Events are kept <strong>only in memory</strong> while the app is running, and refreshed every few minutes.
+    They are never written to disk.</li>
+  <li>The only thing saved is Google's access permission (a “refresh token”), stored on your PC encrypted with
+    your Windows user account (Windows DPAPI), in <code>%LOCALAPPDATA%\PixelBuddy\</code>. The calendars you
+    hide are saved in the same folder.</li>
+  <li>The data is <strong>never</strong> sent to the developer or to anyone else, never sold, never used for
+    advertising, and never used to train AI or machine learning models. PixelBuddy has no server.</li>
+  <li>The app connects only to Google (<code>accounts.google.com</code>, <code>oauth2.googleapis.com</code> and
+    <code>www.googleapis.com</code>), and only for this.</li>
+</ul>
+<p>PixelBuddy's use and transfer of information received from Google APIs adheres to the
+<a href="https://developers.google.com/terms/api-services-user-data-policy">Google API Services User Data Policy</a>,
+including the Limited Use requirements.</p>
+
+<h3>Removing access</h3>
+<ul>
+  <li>In PixelBuddy: <em>Calendars → Disconnect Google Calendar</em>. This deletes the saved permission from
+    your PC and asks Google to revoke it.</li>
+  <li>At any time from your Google account:
+    <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
+  <li>To remove everything, quit PixelBuddy, run <code>PixelBuddy.exe --uninstall</code> and delete the app
+    folder and <code>%LOCALAPPDATA%\PixelBuddy\</code>.</li>
+</ul>
+
+<h2>2. Calendar on macOS</h2>
+<p>On macOS, PixelBuddy reads the macOS Calendar (with your permission) on your Mac. Your accounts
+(iCloud, Google…) are synced by macOS itself, not by PixelBuddy. The macOS version never connects to the
+internet.</p>
+
+<h2>3. Claude Code activity</h2>
+<p>To react to Claude Code, PixelBuddy uses Claude Code hooks, only for the project folder you choose.
+For each event it saves on your computer the session identifier, the session's folder path, the event name,
+the tool name or notification type, and the time. It never reads your prompts, Claude's answers or your files.
+These small files stay in PixelBuddy's local folder, are deleted when the session ends (or after 2 hours
+without activity) and are never sent anywhere.</p>
+
+<h2>4. What PixelBuddy does not do</h2>
+<ul>
+  <li>No accounts, sign-ups, ads, analytics, crash reporting, cookies or trackers.</li>
+  <li>No sharing or selling of data. No data leaves your computer except the calendar requests to Google
+    described above.</li>
+</ul>
+
+<h2>5. Children</h2>
+<p>PixelBuddy is a tool for people who use Claude Code and is not directed at children under 13.</p>
+
+<h2>6. Changes and contact</h2>
+<p>If this policy changes, the new version will be published on this page with a new date. For questions,
+open an issue at <a href="https://github.com/rubenbenitoferrando-sketch/PixelBuddy/issues">github.com/rubenbenitoferrando-sketch/PixelBuddy/issues</a>.</p>
+
+<hr>
+
+<section id="es" lang="es">
+<header>
+  <img src="icon.png" alt="">
+  <div>
+    <h1>PixelBuddy · Política de privacidad</h1>
+    <p class="meta">Fecha de entrada en vigor: 8 de noviembre de 2026</p>
+  </div>
+</header>
+
+<div class="box">
+  <p><strong>En resumen:</strong> PixelBuddy solo <em>lee</em> tu calendario para enseñarte el evento actual y
+  el siguiente. Tus eventos nunca se guardan, venden, comparten ni se envían a ningún sitio. La versión de
+  Windows solo habla con Google; la de macOS no usa internet. No hay cuentas, anuncios, estadísticas ni
+  rastreadores.</p>
+</div>
+
+<p>PixelBuddy es una app de escritorio gratuita y de código abierto para macOS y Windows que muestra un
+pequeño personaje pixel art encima del Dock o de la barra de tareas. El personaje reacciona a lo que hace
+Claude Code y, al hacer clic, enseña tu evento actual y el siguiente de hoy. Su código es público:
+<a href="https://github.com/rubenbenitoferrando-sketch/PixelBuddy">github.com/rubenbenitoferrando-sketch/PixelBuddy</a>.</p>
+
+<h2>1. Google Calendar (versión de Windows)</h2>
+<p>Si eliges <em>Conectar Google Calendar</em>, Google te pide permiso para que la app pueda solo leer tus
+calendarios (permiso <code>https://www.googleapis.com/auth/calendar.readonly</code>). Con él, PixelBuddy lee:</p>
+<ul>
+  <li>La lista de tus calendarios (nombre e identificador), para que elijas cuáles mostrar. El identificador
+    de tu calendario principal es tu correo de Google, que la app enseña en su menú.</li>
+  <li>Los eventos desde ayer hasta el final de hoy de los calendarios que elijas: título, hora de inicio y
+    fin, estado, tipo de evento y si lo has rechazado.</li>
+</ul>
+<p>Cómo se usan y se guardan estos datos:</p>
+<ul>
+  <li>Se usan <strong>solo</strong> para mostrar el bocadillo (“Ahora” y “Después”) en tu propio ordenador.</li>
+  <li>Los eventos se guardan <strong>solo en memoria</strong> mientras la app está abierta y se actualizan cada
+    pocos minutos. Nunca se escriben en el disco.</li>
+  <li>Lo único que se guarda es el permiso de Google (un “refresh token”), en tu PC y cifrado con tu usuario
+    de Windows (DPAPI de Windows), en <code>%LOCALAPPDATA%\PixelBuddy\</code>. Los calendarios que ocultas se
+    guardan en esa misma carpeta.</li>
+  <li>Los datos <strong>nunca</strong> se envían al desarrollador ni a nadie, nunca se venden, nunca se usan
+    para publicidad y nunca se usan para entrenar modelos de inteligencia artificial o aprendizaje automático.
+    PixelBuddy no tiene servidor.</li>
+  <li>La app solo se conecta a Google (<code>accounts.google.com</code>, <code>oauth2.googleapis.com</code> y
+    <code>www.googleapis.com</code>), y solo para esto.</li>
+</ul>
+<p>El uso y la transferencia que hace PixelBuddy de la información recibida de las APIs de Google cumple la
+<a href="https://developers.google.com/terms/api-services-user-data-policy">Política de datos de usuario de los servicios de API de Google</a>,
+incluidos los requisitos de Uso Limitado.</p>
+
+<h3>Quitar el acceso</h3>
+<ul>
+  <li>En PixelBuddy: <em>Calendarios → Desconectar Google Calendar</em>. Borra el permiso guardado en tu PC y
+    pide a Google que lo anule.</li>
+  <li>En cualquier momento desde tu cuenta de Google:
+    <a href="https://myaccount.google.com/permissions">myaccount.google.com/permissions</a>.</li>
+  <li>Para borrarlo todo, sal de PixelBuddy, ejecuta <code>PixelBuddy.exe --uninstall</code> y borra la carpeta
+    de la app y <code>%LOCALAPPDATA%\PixelBuddy\</code>.</li>
+</ul>
+
+<h2>2. Calendario en macOS</h2>
+<p>En macOS, PixelBuddy lee el Calendario de macOS (con tu permiso) en tu Mac. Tus cuentas (iCloud,
+Google…) las sincroniza el propio macOS, no PixelBuddy. La versión de macOS nunca se conecta a internet.</p>
+
+<h2>3. Actividad de Claude Code</h2>
+<p>Para reaccionar a Claude Code, PixelBuddy usa los hooks de Claude Code, solo en la carpeta de proyecto que
+elijas. De cada evento guarda en tu ordenador el identificador de la sesión, la ruta de su carpeta, el nombre
+del evento, el nombre de la herramienta o el tipo de aviso, y la hora. Nunca lee tus mensajes, las respuestas
+de Claude ni tus archivos. Estos pequeños archivos se quedan en la carpeta local de PixelBuddy, se borran al
+terminar la sesión (o tras 2 horas sin actividad) y nunca se envían a ningún sitio.</p>
+
+<h2>4. Lo que PixelBuddy no hace</h2>
+<ul>
+  <li>Sin cuentas, registros, anuncios, estadísticas, informes de errores, cookies ni rastreadores.</li>
+  <li>No comparte ni vende datos. Ningún dato sale de tu ordenador, salvo las consultas a Google del
+    calendario descritas arriba.</li>
+</ul>
+
+<h2>5. Menores</h2>
+<p>PixelBuddy es una herramienta para quienes usan Claude Code y no está dirigida a menores de 13 años.</p>
+
+<h2>6. Cambios y contacto</h2>
+<p>Si esta política cambia, la nueva versión se publicará en esta página con una fecha nueva. Para cualquier
+duda, abre una incidencia en <a href="https://github.com/rubenbenitoferrando-sketch/PixelBuddy/issues">github.com/rubenbenitoferrando-sketch/PixelBuddy/issues</a>.</p>
+</section>
+
+<footer>PixelBuddy · <a href="index.html">Home</a> ·
+  <a href="https://github.com/rubenbenitoferrando-sketch/PixelBuddy">GitHub</a></footer>
+</main>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <!-- Permite compilar la versión de Windows también desde un Mac. -->
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
+    <AssemblyName>PixelBuddy</AssemblyName>
+    <RootNamespace>PixelBuddy</RootNamespace>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Version>1.0.0</Version>
+    <Product>PixelBuddy</Product>
+    <Description>Pixel art buddies that react to Claude Code</Description>
+    <SatelliteResourceLanguages>en;es</SatelliteResourceLanguages>
+    <ApplicationIcon Condition="Exists('PixelBuddy.ico')">PixelBuddy.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- Identificador de PixelBuddy en Google (para Google Calendar). No está en el repositorio:
+       se pasa al compilar (build.sh lo lee de windows/google-oauth.env o de variables de entorno).
+       Sin él, la app funciona igual pero sin calendario. -->
+  <ItemGroup>
+    <AssemblyMetadata Include="GoogleClientId" Value="$(GoogleClientId)" />
+    <AssemblyMetadata Include="GoogleClientSecret" Value="$(GoogleClientSecret)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Shared\*.cs" />
+    <!-- Los mismos personajes que la app de Mac. -->
+    <Content Include="..\..\assets\avatars\**\*.png;..\..\assets\avatars\**\manifest.json"
+             LinkBase="avatars" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
+</Project>

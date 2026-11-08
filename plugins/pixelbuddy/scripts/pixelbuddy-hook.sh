@@ -10,6 +10,17 @@
 #
 # Reglas: instantáneo, solo herramientas de macOS, nada por la salida estándar
 # (en UserPromptSubmit se añadiría al contexto de Claude) y SIEMPRE termina con 0.
+#
+# En Windows (Claude Code lo ejecuta con Git Bash) pasa el evento al hook de la app
+# de Windows, %LOCALAPPDATA%\PixelBuddy\pixelbuddy-hook.exe, que hace lo mismo.
+
+if [ -n "${WINDIR:-}${windir:-}" ]; then
+  EXE="${LOCALAPPDATA:-}\\PixelBuddy\\pixelbuddy-hook.exe"
+  command -v cygpath >/dev/null 2>&1 && EXE=$(cygpath -u "$EXE" 2>/dev/null)
+  [ -f "$EXE" ] && exec "$EXE" "${1:-}" >/dev/null 2>&1
+  cat >/dev/null 2>&1
+  exit 0
+fi
 
 (
   umask 077   # archivos y carpeta solo legibles por ti
